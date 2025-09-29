@@ -7,6 +7,7 @@ def generate_1f1b_pipeline_actions(num_stages: int, num_microbatches: int, upstr
     for stage_idx in range(num_stages):
         rank = stage_idx  # stage == rank
         actions = []
+        recv_actions = []
         local_id = 0
 
         warmup_chunks = min(num_microbatches, num_stages - stage_idx)
@@ -75,18 +76,28 @@ def generate_1f1b_pipeline_actions_pro(num_stages: int,total_samples: int, num_m
             ### now, we get the sample chunk this rank should focus on...
 
             actions = []
-            local_id = 0
+            recv_actions = []
+            local_id_comp = total_samples
+            local_id_comm = 0
 
             warmup_chunks = min(num_microbatches, (num_stages - stage_idx)*2-1)  #the stride is 2 per...
             
             fwd_mb_index = 0  
             bwd_mb_index = 0  
+
             # [stage],[rank],[id],[action type],[microbatch],[dest_rank],[upstream],[dependency]
             def make_action(stage, rank, type_, mb, dest):
-                nonlocal local_id
-                a = _Action(stage, rank, local_id, type_, mb, dest, upstream, None)
-                local_id += 1
+                nonlocal local_id_comp
+                nonlocal local_id_comm
+                if type_ == _ComputationType.RECV_F or type_ == _ComputationType.RECV_B:
+                    a = _Action(stage, rank, local_id_comm, type_, mb, dest, upstream, None)
+                    local_id_comm += 1
+                else:
+                    a = _Action(stage, rank, local_id_comp, type_, mb, dest, upstream, None)
+                    local_id_comp += 1                    
                 return a
+            
+
             next_group_info = batch_info[stage_idx+1] if stage_idx+1<num_stages else None
             prev_group_info = batch_info[stage_idx-1] if stage_idx-1>=0 else None
 
@@ -113,20 +124,25 @@ def generate_1f1b_pipeline_actions_pro(num_stages: int,total_samples: int, num_m
                 bias = mb_index*per_mbatch_size
                 return [make_action(stage_idx, cur_rank, type_, tuple([x + bias for x in sample_chunk]) , None)]
 
+
             #add all necessary receives at the beginning: 
             ##jin: important!! here we test and assume that the communication is asyncronize...
             #so, we can do like this...
-            for i in range(num_microbatches):
-                if stage_idx>0:
-                    actions.extend(make_comm_action(i, _ComputationType.RECV_F, prev_group_info))
-            for i in range(num_microbatches):
-                if stage_idx< num_stages - 1:
-                    actions.extend(make_comm_action(i, _ComputationType.RECV_B, next_group_info))
+
+
+            #for i in range(num_microbatches):
+            #    if stage_idx>0:
+            #        actions.extend(make_comm_action(i, _ComputationType.RECV_F, prev_group_info))
+            #for i in range(num_microbatches):
+            #    if stage_idx< num_stages - 1:
+            #        actions.extend(make_comm_action(i, _ComputationType.RECV_B, next_group_info))
+
 
             # Warmup
             for _ in range(warmup_chunks):
                 #if stage_idx > 0:
                     #actions.append(make_action(stage_idx, rank, _ComputationType.RECV_F, fwd_mb, rank - 1))
+                recv_actions.extend(make_comm_action(fwd_mb_index, _ComputationType.RECV_F, prev_group_info))
                 actions.extend(make_comp_action(fwd_mb_index, _ComputationType.FORWARD))
                 if stage_idx < num_stages - 1:
                     actions.extend(make_comm_action(fwd_mb_index, _ComputationType.SEND_F, next_group_info))
@@ -138,6 +154,7 @@ def generate_1f1b_pipeline_actions_pro(num_stages: int,total_samples: int, num_m
                 #if stage_idx < num_stages - 1:
                     #actions.append(make_action(stage_idx, rank, _ComputationType.RECV_B, bwd_mb, rank + 1))
                 #actions.append(make_action(stage_idx, rank, _ComputationType.FULL_BACKWARD, bwd_mb, None))
+                recv_actions.extend(make_comm_action(bwd_mb_index, _ComputationType.RECV_B, next_group_info))
                 actions.extend(make_comp_action(bwd_mb_index, _ComputationType.FULL_BACKWARD))
                 if stage_idx > 0:
                     #actions.append(make_action(stage_idx, rank, _ComputationType.SEND_B, bwd_mb, rank - 1))
@@ -147,6 +164,7 @@ def generate_1f1b_pipeline_actions_pro(num_stages: int,total_samples: int, num_m
                 #if stage_idx > 0:
                     #actions.append(make_action(stage_idx, rank, _ComputationType.RECV_F, fwd_mb, rank - 1))
                 #actions.append(make_action(stage_idx, rank, _ComputationType.FORWARD, fwd_mb, None))
+                recv_actions.extend(make_comm_action(fwd_mb_index, _ComputationType.RECV_F, prev_group_info))
                 actions.extend(make_comp_action(fwd_mb_index, _ComputationType.FORWARD))
                 if stage_idx < num_stages - 1:
                     #actions.append(make_action(stage_idx, rank, _ComputationType.SEND_F, fwd_mb, rank + 1))
@@ -158,6 +176,7 @@ def generate_1f1b_pipeline_actions_pro(num_stages: int,total_samples: int, num_m
                 #if stage_idx < num_stages - 1:
                     #actions.append(make_action(stage_idx, rank, _ComputationType.RECV_B, bwd_mb, rank + 1))
                 #actions.append(make_action(stage_idx, rank, _ComputationType.FULL_BACKWARD, bwd_mb, None))
+                recv_actions.extend(make_comm_action(bwd_mb_index, _ComputationType.RECV_B, next_group_info))
                 actions.extend(make_comp_action(bwd_mb_index, _ComputationType.FULL_BACKWARD))
                 if stage_idx > 0:
                     #actions.append(make_action(stage_idx, rank, _ComputationType.SEND_B, bwd_mb, rank - 1))
@@ -165,8 +184,8 @@ def generate_1f1b_pipeline_actions_pro(num_stages: int,total_samples: int, num_m
                 bwd_mb_index += 1
 
             if len(batch_info[stage_idx])>1:
-                actions.append(_Action(stage_idx, cur_rank, local_id, _ComputationType.ALL_REDUCE, None, None, None, None))
-            actions_per_rank[cur_rank] = actions
+                actions.append(_Action(stage_idx, cur_rank, local_id_comp, _ComputationType.ALL_REDUCE, None, upstream = 10000))
+            actions_per_rank[cur_rank] = recv_actions + actions
 
     return actions_per_rank
 

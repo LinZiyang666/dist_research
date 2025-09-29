@@ -1,0 +1,2042 @@
+[
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "start_ns": 1759000651520806000,
+    "end_ns": 1759000658010676529,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "start_ns": 1759000658291267556,
+    "end_ns": 1759000665039382818,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "start_ns": 1759000665363673534,
+    "end_ns": 1759000672386365937,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "start_ns": 1759000672648876567,
+    "end_ns": 1759000679916288103,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "start_ns": 1759000680223244823,
+    "end_ns": 1759000687287642627,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "start_ns": 1759000687681199460,
+    "end_ns": 1759000690863403109,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "start_ns": 1759000690877460668,
+    "end_ns": 1759000696273798788,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "start_ns": 1759000696716959175,
+    "end_ns": 1759000699720268480,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "start_ns": 1759000699740773048,
+    "end_ns": 1759000702982528433,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "start_ns": 1759000703416174938,
+    "end_ns": 1759000706193475722,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "start_ns": 1759000706207854814,
+    "end_ns": 1759000710017341926,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "start_ns": 1759000710321663451,
+    "end_ns": 1759000713053774491,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      40,
+      41,
+      42,
+      43,
+      44
+    ],
+    "start_ns": 1759000713067586269,
+    "end_ns": 1759000715576443578,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "start_ns": 1759000715736693975,
+    "end_ns": 1759000718342313832,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "start_ns": 1759000718365372315,
+    "end_ns": 1759000720917798466,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "start_ns": 1759000721724618845,
+    "end_ns": 1759000724412613744,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "start_ns": 1759000724423735237,
+    "end_ns": 1759000726551903933,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "start_ns": 1759000728254370148,
+    "end_ns": 1759000730791669753,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "start_ns": 1759000730809937278,
+    "end_ns": 1759000732570719475,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "start_ns": 1759000739904654146,
+    "end_ns": 1759000742854133918,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      60,
+      61,
+      62,
+      63,
+      64
+    ],
+    "start_ns": 1759000742862794078,
+    "end_ns": 1759000744434216352,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      40,
+      41,
+      42,
+      43,
+      44
+    ],
+    "start_ns": 1759000750427026917,
+    "end_ns": 1759000753199351516,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      65,
+      66,
+      67,
+      68,
+      69
+    ],
+    "start_ns": 1759000753201295176,
+    "end_ns": 1759000754573452391,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "start_ns": 1759000758904863599,
+    "end_ns": 1759000761118232434,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      70,
+      71,
+      72,
+      73,
+      74
+    ],
+    "start_ns": 1759000761119695756,
+    "end_ns": 1759000762217669743,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "start_ns": 1759000765403772327,
+    "end_ns": 1759000767900471698,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      75,
+      76,
+      77,
+      78,
+      79
+    ],
+    "start_ns": 1759000767902447861,
+    "end_ns": 1759000768992827333,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "start_ns": 1759000769957344981,
+    "end_ns": 1759000772147654089,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      80,
+      81,
+      82,
+      83,
+      84
+    ],
+    "start_ns": 1759000772148970419,
+    "end_ns": 1759000773187176776,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      60,
+      61,
+      62,
+      63,
+      64
+    ],
+    "start_ns": 1759000773780607160,
+    "end_ns": 1759000775772715959,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "start_ns": 1759000775783748403,
+    "end_ns": 1759000776538780552,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      65,
+      66,
+      67,
+      68,
+      69
+    ],
+    "start_ns": 1759000777567030376,
+    "end_ns": 1759000779563725407,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      90,
+      91,
+      92,
+      93,
+      94
+    ],
+    "start_ns": 1759000779565069433,
+    "end_ns": 1759000780290895942,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      70,
+      71,
+      72,
+      73,
+      74
+    ],
+    "start_ns": 1759000782055778287,
+    "end_ns": 1759000783873334952,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FORWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "start_ns": 1759000783874018007,
+    "end_ns": 1759000784565172151,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      75,
+      76,
+      77,
+      78,
+      79
+    ],
+    "start_ns": 1759000786291349455,
+    "end_ns": 1759000788155674278,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      80,
+      81,
+      82,
+      83,
+      84
+    ],
+    "start_ns": 1759000790747105663,
+    "end_ns": 1759000792661280451,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "start_ns": 1759000795142721573,
+    "end_ns": 1759000797191600457,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      90,
+      91,
+      92,
+      93,
+      94
+    ],
+    "start_ns": 1759000799308214150,
+    "end_ns": 1759000801620612774,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 0,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 0,
+    "mb_idx": [
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "start_ns": 1759000803778144703,
+    "end_ns": 1759000805910961995,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "start_ns": 1759000658327436469,
+    "end_ns": 1759000659965371732,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "start_ns": 1759000665390413049,
+    "end_ns": 1759000667244780920,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "start_ns": 1759000672650699735,
+    "end_ns": 1759000674313628478,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "start_ns": 1759000674329360804,
+    "end_ns": 1759000676744687967,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "start_ns": 1759000680244614732,
+    "end_ns": 1759000681882535110,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "start_ns": 1759000685708344284,
+    "end_ns": 1759000688094431213,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "start_ns": 1759000688117716051,
+    "end_ns": 1759000689692838185,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "start_ns": 1759000694786824101,
+    "end_ns": 1759000698023393614,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "start_ns": 1759000698045777398,
+    "end_ns": 1759000699592923890,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "start_ns": 1759000703457841886,
+    "end_ns": 1759000705561695686,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "start_ns": 1759000705575784303,
+    "end_ns": 1759000706891289412,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "start_ns": 1759000711051457389,
+    "end_ns": 1759000713549353413,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "start_ns": 1759000713572462090,
+    "end_ns": 1759000714863487288,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "start_ns": 1759000718255856943,
+    "end_ns": 1759000721586378076,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      40,
+      41,
+      42,
+      43,
+      44
+    ],
+    "start_ns": 1759000721598139349,
+    "end_ns": 1759000722930789672,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "start_ns": 1759000725123842341,
+    "end_ns": 1759000728004971975,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "start_ns": 1759000728283532812,
+    "end_ns": 1759000735692347375,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "start_ns": 1759000736324651445,
+    "end_ns": 1759000739681437336,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "start_ns": 1759000739883093067,
+    "end_ns": 1759000746625345327,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      40,
+      41,
+      42,
+      43,
+      44
+    ],
+    "start_ns": 1759000747085977929,
+    "end_ns": 1759000750204652123,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "start_ns": 1759000750380672508,
+    "end_ns": 1759000755576566828,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "start_ns": 1759000756025366124,
+    "end_ns": 1759000758732047980,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      60,
+      61,
+      62,
+      63,
+      64
+    ],
+    "start_ns": 1759000758853237818,
+    "end_ns": 1759000762530900328,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "start_ns": 1759000762817581453,
+    "end_ns": 1759000765228012950,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      65,
+      66,
+      67,
+      68,
+      69
+    ],
+    "start_ns": 1759000765299645988,
+    "end_ns": 1759000767247237807,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "start_ns": 1759000767362091459,
+    "end_ns": 1759000769810818735,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      70,
+      71,
+      72,
+      73,
+      74
+    ],
+    "start_ns": 1759000769836682430,
+    "end_ns": 1759000771350384752,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      60,
+      61,
+      62,
+      63,
+      64
+    ],
+    "start_ns": 1759000771385941168,
+    "end_ns": 1759000773659010022,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      75,
+      76,
+      77,
+      78,
+      79
+    ],
+    "start_ns": 1759000773684142148,
+    "end_ns": 1759000775042672020,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      65,
+      66,
+      67,
+      68,
+      69
+    ],
+    "start_ns": 1759000775055110561,
+    "end_ns": 1759000777434688057,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      80,
+      81,
+      82,
+      83,
+      84
+    ],
+    "start_ns": 1759000777447339128,
+    "end_ns": 1759000778710971438,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      70,
+      71,
+      72,
+      73,
+      74
+    ],
+    "start_ns": 1759000779679942919,
+    "end_ns": 1759000781932527219,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "start_ns": 1759000781941848752,
+    "end_ns": 1759000782914885853,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      75,
+      76,
+      77,
+      78,
+      79
+    ],
+    "start_ns": 1759000784171453232,
+    "end_ns": 1759000786174356734,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      90,
+      91,
+      92,
+      93,
+      94
+    ],
+    "start_ns": 1759000786182144909,
+    "end_ns": 1759000786987342986,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      80,
+      81,
+      82,
+      83,
+      84
+    ],
+    "start_ns": 1759000788838690483,
+    "end_ns": 1759000790631150431,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FORWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "start_ns": 1759000790635531993,
+    "end_ns": 1759000791405994505,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "start_ns": 1759000793188316223,
+    "end_ns": 1759000795024191255,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      90,
+      91,
+      92,
+      93,
+      94
+    ],
+    "start_ns": 1759000797530805403,
+    "end_ns": 1759000799192722994,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 1,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 1,
+    "mb_idx": [
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "start_ns": 1759000801964127996,
+    "end_ns": 1759000803643362762,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "start_ns": 1759000660110836770,
+    "end_ns": 1759000668188293005,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "start_ns": 1759000668456462565,
+    "end_ns": 1759000673825919176,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "start_ns": 1759000674058125990,
+    "end_ns": 1759000680163573028,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "start_ns": 1759000680409629391,
+    "end_ns": 1759000685547844425,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "start_ns": 1759000685641002909,
+    "end_ns": 1759000690189321254,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      10,
+      11,
+      12,
+      13,
+      14
+    ],
+    "start_ns": 1759000690401970331,
+    "end_ns": 1759000694632111949,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "start_ns": 1759000694736511911,
+    "end_ns": 1759000698897175718,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "start_ns": 1759000699146455479,
+    "end_ns": 1759000703311277564,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "start_ns": 1759000703373687260,
+    "end_ns": 1759000706291361359,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      20,
+      21,
+      22,
+      23,
+      24
+    ],
+    "start_ns": 1759000706446980930,
+    "end_ns": 1759000710904190496,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "start_ns": 1759000710977494846,
+    "end_ns": 1759000713567105746,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "start_ns": 1759000713716885192,
+    "end_ns": 1759000718095402509,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "start_ns": 1759000718150858829,
+    "end_ns": 1759000720344884907,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "start_ns": 1759000720482905614,
+    "end_ns": 1759000724984803715,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "start_ns": 1759000725022051059,
+    "end_ns": 1759000727170668903,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      35,
+      36,
+      37,
+      38,
+      39
+    ],
+    "start_ns": 1759000727292847797,
+    "end_ns": 1759000730946073468,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      40,
+      41,
+      42,
+      43,
+      44
+    ],
+    "start_ns": 1759000730986354147,
+    "end_ns": 1759000732861120750,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      40,
+      41,
+      42,
+      43,
+      44
+    ],
+    "start_ns": 1759000732980820741,
+    "end_ns": 1759000737285835358,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "start_ns": 1759000737315613978,
+    "end_ns": 1759000739248957484,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "start_ns": 1759000739377258208,
+    "end_ns": 1759000744008251124,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "start_ns": 1759000746992794049,
+    "end_ns": 1759000748824419386,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      50,
+      51,
+      52,
+      53,
+      54
+    ],
+    "start_ns": 1759000748925741679,
+    "end_ns": 1759000752407041332,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "start_ns": 1759000755931278723,
+    "end_ns": 1759000757772008446,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      55,
+      56,
+      57,
+      58,
+      59
+    ],
+    "start_ns": 1759000757866982366,
+    "end_ns": 1759000761255284909,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      60,
+      61,
+      62,
+      63,
+      64
+    ],
+    "start_ns": 1759000762770590872,
+    "end_ns": 1759000764468100286,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      60,
+      61,
+      62,
+      63,
+      64
+    ],
+    "start_ns": 1759000764562458171,
+    "end_ns": 1759000768328099826,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      65,
+      66,
+      67,
+      68,
+      69
+    ],
+    "start_ns": 1759000768336212285,
+    "end_ns": 1759000769826734258,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      65,
+      66,
+      67,
+      68,
+      69
+    ],
+    "start_ns": 1759000769923074316,
+    "end_ns": 1759000774020475926,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      70,
+      71,
+      72,
+      73,
+      74
+    ],
+    "start_ns": 1759000774028481706,
+    "end_ns": 1759000775742958021,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      70,
+      71,
+      72,
+      73,
+      74
+    ],
+    "start_ns": 1759000775838868083,
+    "end_ns": 1759000779550507732,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      75,
+      76,
+      77,
+      78,
+      79
+    ],
+    "start_ns": 1759000779555779051,
+    "end_ns": 1759000780765094782,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      75,
+      76,
+      77,
+      78,
+      79
+    ],
+    "start_ns": 1759000780860625233,
+    "end_ns": 1759000784054061013,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      80,
+      81,
+      82,
+      83,
+      84
+    ],
+    "start_ns": 1759000784059194833,
+    "end_ns": 1759000785293523287,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      80,
+      81,
+      82,
+      83,
+      84
+    ],
+    "start_ns": 1759000785386930506,
+    "end_ns": 1759000788721435617,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "start_ns": 1759000788726871650,
+    "end_ns": 1759000789890018673,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      85,
+      86,
+      87,
+      88,
+      89
+    ],
+    "start_ns": 1759000789979626457,
+    "end_ns": 1759000793073331715,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      90,
+      91,
+      92,
+      93,
+      94
+    ],
+    "start_ns": 1759000793077604895,
+    "end_ns": 1759000794228770265,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      90,
+      91,
+      92,
+      93,
+      94
+    ],
+    "start_ns": 1759000794318697274,
+    "end_ns": 1759000797415437977,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FORWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "start_ns": 1759000797419943779,
+    "end_ns": 1759000798555443118,
+    "net_series": [],
+    "status": "completed"
+  },
+  {
+    "batch_id": 0,
+    "rank": 2,
+    "action": "FULL_BACKWARD",
+    "stage_idx": 2,
+    "mb_idx": [
+      95,
+      96,
+      97,
+      98,
+      99
+    ],
+    "start_ns": 1759000798646231007,
+    "end_ns": 1759000801791468187,
+    "net_series": [],
+    "status": "completed"
+  }
+]

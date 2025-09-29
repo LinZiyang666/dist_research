@@ -39,6 +39,11 @@ class PartStart(nn.Module):                          # rank 0
     def forward(self, input_ids):
         bsz, seqlen = input_ids.shape
         device = input_ids.device
+        # if not hasattr(self, '_debug_calls'):
+        #     self._debug_calls = 0
+        # if self._debug_calls < 20:
+        #     print(f'[PartStart] call{self._debug_calls} batch={bsz} seqlen={seqlen}')
+        # self._debug_calls += 1
         position_ids = torch.arange(seqlen, device=device).unsqueeze(0).expand(bsz, -1).contiguous()
         hidden = self.embed_tokens(input_ids)
         position_embeddings = self.rotary_emb(hidden, position_ids)
@@ -47,7 +52,8 @@ class PartStart(nn.Module):                          # rank 0
             diagonal=1
         ).unsqueeze(0).unsqueeze(0).expand(bsz, 1, -1, -1).contiguous()
 
-        for layer in self.layers:
+        for idx, layer in enumerate(self.layers):
+            layer_start = time.perf_counter()
             layer_outputs = layer(
                 hidden_states=hidden,
                 attention_mask=attention_mask,
@@ -57,6 +63,9 @@ class PartStart(nn.Module):                          # rank 0
                 use_cache=False,
             )
             hidden = layer_outputs[0]
+            # if self._debug_calls <= 5:
+            #     elapsed = (time.perf_counter() - layer_start) * 1e3
+            #     print(f'[PartStart] call{self._debug_calls-1} layer{idx} {elapsed:.2f}ms')
 
         return hidden.contiguous(), attention_mask.contiguous()
 
@@ -249,6 +258,7 @@ def main():
 
 
     if is_group == 0:
+        dist.barrier()
         stage_mod.to(device)
         stage = PipelineStage_with_mutiple_ranks(stage_mod, stage_index=shard_stage,
                             num_stages=world, device=device,
@@ -256,10 +266,14 @@ def main():
                             prev_group=prev_g, this_group=this_g, next_group=next_g)
         
     else:
-        dp_group = dist.new_group(ranks=this_g)
+        dist.barrier()
+        time.sleep(shard_stage)
+        dp_group = dist.new_group(ranks=this_g, backend="gloo")
+        print(f"dp组 {this_g} 初始化完成")
         stage_mod.to(device)
-        
-        #Using DDP as the data parallelism component of our frame
+        print("进入DDP初始化")
+        #Using DDP as the data parallelism component of our frame 
+        time.sleep(shard_stage)
         stage_mod = DDP(
             stage_mod,
             device_ids=None,        # CPU don' use device_ids
@@ -277,7 +291,7 @@ def main():
     import gc; gc.collect()
 
     raw = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")
-    block = 1024
+    block = 128
     def tok_fn(ex): 
         return tok(ex["text"], return_attention_mask=False)
     def grp_fn(ex):
@@ -293,8 +307,8 @@ def main():
     batch_size = args.batch_size
     microbatch_num = args.microbatch_num
     
-    if rank == 0:
-        loader = torch.utils.data.DataLoader(ds, batch_size=batch_size, shuffle=True, drop_last=True)
+    if stage.is_first:
+        loader = torch.utils.data.DataLoader(ds, batch_size=batch_size, shuffle=False, drop_last=True)
 
     def loss_fn(output, target):
         if output is None or target is None:
@@ -304,12 +318,13 @@ def main():
         target = target[:, 1:].reshape(-1)
         return F.cross_entropy(output, target)
 
-    #jin: we get the total_batchs from plans, but make sure args input is scynized...
+    # jin: we get the total_batchs from plans, but make sure args input is scynized...
     if total_batchs!= int(args.batch_size/args.microbatch_num):
-        raise ValueError(f"Mbatch misbatch plan's assumption")
+        raise ValueError(f"Mbatch {total_batchs} not equal to {int(args.batch_size/args.microbatch_num)},misbatch plan's assumption")
     
     print(f"n_microbatches {args.batch_size}")
     sched = PipelineScheduleRuntimeWithDirection([stage], n_microbatches=args.batch_size, loss_fn=loss_fn, root_pass=args.sudo_pass)
+    #sched = PipelineScheduleRuntimeWithDirection([stage], n_microbatches=20, loss_fn=loss_fn, root_pass=args.sudo_pass)
 
     # === Memory monitor: start & register containers (CPU/Gloo safe) ===
 
@@ -345,6 +360,8 @@ def main():
     actions = generate_1f1b_pipeline_actions_pro(num_stages= total_stages, total_samples = args.batch_size, num_microbatches= args.microbatch_num,
                                                  group_info=group_info, batch_info=batch_info,
                                                   upstream = args.upstream)
+    # actions = generate_1f1b_pipeline_actions(num_stages= total_stages, num_microbatches= 20, upstream= 1000)
+    
     sched._load_actions(actions, format="compute_comms")
     
     opt = optim.Adam(stage_mod.parameters(), lr=1e-4)            
@@ -352,7 +369,7 @@ def main():
     
     
     for epoch in range(1):
-        if rank == 0:
+        if stage.is_first:
             if args.train_steps is None:
                 steps_tensor = torch.tensor(len(loader), device=device)
             else:
@@ -379,7 +396,7 @@ def main():
                 opt.zero_grad(set_to_none=True)
 
                # with monitor.section("sched.step"):
-                if rank == 0:
+                if stage.is_first:
                     batch = next(data_iter)
                     inp = batch["input_ids"].to(device)
                     tgt = batch["labels"].to(device)

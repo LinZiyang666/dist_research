@@ -5,6 +5,7 @@ import operator
 from abc import ABC, abstractmethod
 from typing import Any, Callable, cast, Optional, Union, List, Dict
 from collections import defaultdict
+import time
 
 import torch
 import torch.distributed as dist
@@ -418,56 +419,6 @@ class PipelineStage_with_mutiple_ranks(PipelineStage):
 
         self._last_comm_plan[("RECV_B", bwd_chunk_id)] = ops_per_chunk
         return ops
-
-    
-    
-    # def get_bwd_send_ops(self, bwd_chunk_id: int, rank: int, dest_rank: int) -> list[dist.P2POp]:
-    #     """
-    #     Get the gradient send ops for current stage's backward.
-    #     """
-    #     self._check_chunk_id(bwd_chunk_id)
-
-    #     if not self.has_backward or self.is_first:
-    #         return []
-
-    #     if self.grad_send_info is None:
-    #         self.grad_send_info = self._create_grad_send_info(self.args_recv_info[0])
-
-    #     ops: list[dist.P2POp] = []
-    #     grads_input = self.bwd_cache.pop(bwd_chunk_id)
-    #     self.fwd_cache.pop(bwd_chunk_id, None)
-        
-    #     for grad, grad_recv_stage in zip(grads_input, self.grad_send_info):
-    #         # 跳过 None 的梯度接收阶段（对应于整数类型的tensor）
-    #         if grad_recv_stage is None:
-    #             continue
-                
-    #         if isinstance(grad, torch.Tensor):
-    #             # 额外检查：只发送浮点类型的梯度
-    #             if not (grad.is_floating_point() or torch.is_complex(grad)):
-    #                 #print(f"[{dist.get_rank()}] Skipping non-floating grad send: dtype={grad.dtype}")
-    #                 continue
-                    
-    #             logger.debug(
-    #                 "%s Sending gradient to Stage %s: %s",
-    #                 self.log_prefix,
-    #                 grad_recv_stage,
-    #                 grad.size(),
-    #             )
-    #             peer_rank = dest_rank
-    #             peer_global_rank = (
-    #                 peer_rank
-    #                 if self.group is None
-    #                 else dist.get_global_rank(self.group, peer_rank)
-    #             )
-    #             ops.append(dist.P2POp(dist.isend, grad, peer_global_rank, self.group))
-    #         elif grad is not None:
-    #             raise RuntimeError(
-    #                 f"[{self.stage_index}] expecting a gradient tensor for an input "
-    #                 f"coming from stage {grad_recv_stage}, but got {type(grad)}"
-    #             )
-        
-    #     return ops
     
     def _execute_allreduce(self):
         """
@@ -565,6 +516,8 @@ class PipelineStage_with_mutiple_ranks(PipelineStage):
         kwargs: Optional[dict[str, Any]] = None,
         pack_size: int = 1
     ):
+        total_start = time.perf_counter()
+
         """
         Perform forward pass on the stage with one microbatch.
         `args` and `kwargs` are the inputs from *external* to this stage.
@@ -586,7 +539,9 @@ class PipelineStage_with_mutiple_ranks(PipelineStage):
 
         composite_args = None
 
-        if need_rt_bcast:
+        use_scheduler_inputs = bool(args) and pack_size > 1
+
+        if need_rt_bcast and not use_scheduler_inputs:
             if self.is_leader:
                 if not args or len(args) == 0:
                     raise RuntimeError(
@@ -599,18 +554,15 @@ class PipelineStage_with_mutiple_ranks(PipelineStage):
                 buf = [None]
                 dist.broadcast_object_list(buf, src=self.leader, group=self.dp_group)
                 composite_args = buf[0]
-
         else:
             if args:
                 composite_args = args
             else:
-                # 对于第一阶段，如果没有args但有kwargs，使用空args避免_retrieve_recv_activations
-                if getattr(self, 'prev_group', None) is None:  # 是第一阶段
+                if getattr(self, 'prev_group', None) is None:
                     composite_args = ()
                 else:
                     composite_args = self._retrieve_recv_activations(fwd_chunk_id)
 
-        # 对于第一阶段，如果有kwargs数据，空args是正常的
         is_first_stage = getattr(self, 'prev_group', None) is None
         has_kwargs_data = kwargs and any(v is not None for v in kwargs.values())
 
@@ -629,6 +581,8 @@ class PipelineStage_with_mutiple_ranks(PipelineStage):
             and composite_args
             and isinstance(composite_args[0], torch.Tensor)
         ):
+            # if self.stage_index == 0 and fwd_chunk_id < 10:
+            #     print(f"[stage0] chunk{fwd_chunk_id} composite shape={tuple(composite_args[0].shape)}")
             mb_bs = composite_args[0].shape[0] // pack_size
             args_for_val = tuple(
                 (t[:mb_bs] if isinstance(t, torch.Tensor) else t)
@@ -644,8 +598,35 @@ class PipelineStage_with_mutiple_ranks(PipelineStage):
 
         self._validate_fwd_input(args_for_val, kwargs_for_val)
 
+        prep_done = time.perf_counter()
+
         # Compute forward
         try:
+            # print(
+            #         "FORWARD composite_args=", tuple(
+            #             (t.shape if torch.is_tensor(t) else type(t))
+            #             for t in composite_args
+            #         ),
+            #         "; composite_kwargs=",
+            #         {k: (v.shape if torch.is_tensor(v) else type(v))
+            #         for k, v in composite_kwargs}
+            #     )
+            
+            # if self.is_print == 0:
+            #     self.is_print =1
+            #     from tensor_debug import dump_forward_debug
+            #     import os
+            #     try:
+            #         save_dir = dump_forward_debug(
+            #             save_root=os.path.abspath("./framework_forward"),
+            #             composite_args=composite_args,
+            #             composite_kwargs=composite_kwargs,
+            #             outputs=None,
+            #             tag=f"rank{torch.distributed.get_rank() if torch.distributed.is_initialized() else 0}"
+            #         )
+            #         print(f"[forward-debug] saved to: {save_dir}")
+            #     except Exception as e:
+            #         print(f"[forward-debug] dump failed: {e}")
             output = self.forward_maybe_with_nosync(*composite_args, **composite_kwargs)
 
         except Exception as e:
@@ -655,6 +636,8 @@ class PipelineStage_with_mutiple_ranks(PipelineStage):
             kwargs: {composite_kwargs}
             """
             raise RuntimeError(exc_msg) from e
+
+        fwd_done = time.perf_counter()
 
         # See [Note: pipeline model output type]
         output_tuple = _normalize_model_output_as_tuple(output)
@@ -684,6 +667,16 @@ class PipelineStage_with_mutiple_ranks(PipelineStage):
             outputs_for_val = output_tuple
 
         self._validate_fwd_outputs(outputs_for_val)
+
+        total_done = time.perf_counter()
+
+        if self.stage_index == 0 and fwd_chunk_id < 40:
+            rank = dist.get_rank()
+            prep_ms = (prep_done - total_start) * 1e3
+            fwd_ms = (fwd_done - prep_done) * 1e3
+            post_ms = (total_done - fwd_done) * 1e3
+            total_ms = (total_done - total_start) * 1e3
+            print(f"[rank{rank}] stage{self.stage_index} chunk{fwd_chunk_id} pack{pack_size} prep={prep_ms:.2f}ms fwd={fwd_ms:.2f}ms post={post_ms:.2f}ms total={total_ms:.2f}ms")
 
         # We return the original user-provied output, not normalized to tuple.
         # See [Note: pipeline model output type]

@@ -30,7 +30,7 @@
 # - Requires `transformers`, `datasets`, and `tqdm` libraries
 ##############################################
 
-import os, torch, torch.nn as nn, torch.nn.functional as F, torch.optim as optim
+import argparse, os, torch, torch.nn as nn, torch.nn.functional as F, torch.optim as optim
 import torch.distributed as dist
 
 from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
@@ -136,7 +136,22 @@ class Part2(nn.Module):                                # rank 2：20-27 + norm +
         hidden = self.norm(hidden)
         return self.lm_head(hidden)                     # logits
 
-
+parser = argparse.ArgumentParser()
+parser.add_argument("--train_steps", type=int, default=1,
+                    help="The total number of steps for training. If omitted, run the entire DataLoader.")
+parser.add_argument("--batch_size", type=int,
+                    default=int(os.getenv("BATCH_SIZE", 20)),
+                    help="The batch size of each rank (the environment variable BATCH_SIZE can be overridden)")
+parser.add_argument("--microbatch_num", type=int,
+                    default=int(os.getenv("MICROBATCH_NUM", 5)),
+                    help="Micro-batch number (the environment variable MICROBATCH_NUM can be overridden)")
+parser.add_argument("--sudo_pass", default=os.getenv("SUDO_PASS"),
+                    help='Write the password of root')
+parser.add_argument("--upstream", default=os.getenv("upstream"),
+                    help='Write the upstream in mbps')
+parser.add_argument("--plan_loc", type=str, required=True,
+                    help='the json file that stores the sharding plans...')
+args = parser.parse_args()
 def main():
     dist.init_process_group("gloo", init_method="env://")
 
@@ -169,7 +184,7 @@ def main():
     
     raw = load_dataset("wikitext", "wikitext-2-raw-v1", split="train")
     block = 128
-    batch_size = 5
+    batch_size = 100
     
     def tok_fn(ex): 
         return tok(ex["text"], return_attention_mask=False)
@@ -185,7 +200,7 @@ def main():
     ds.set_format("torch", columns=["input_ids", "labels"])
     
     if rank == 0:
-        loader = torch.utils.data.DataLoader(ds, batch_size=batch_size, shuffle=True, drop_last=True)
+        loader = torch.utils.data.DataLoader(ds, batch_size=batch_size, shuffle=False, drop_last=True)
 
     def loss_fn(output, target):
         if output is None or target is None:
@@ -198,7 +213,7 @@ def main():
         return F.cross_entropy(output, target)
 
     # Number of microbatches should be <= batch_size
-    n_microbatches = min(5, batch_size)
+    n_microbatches = min(20, batch_size)
     sched = Schedule1F1B(stage, n_microbatches=n_microbatches, loss_fn=loss_fn)
     opt = optim.Adam(stage_mod.parameters(), lr=1e-4)
     prev_loss = None
@@ -209,19 +224,19 @@ def main():
             steps = torch.tensor(len(loader), device=device)
             dist.broadcast(steps, 0)
             data_iter = iter(loader)
-            print(f"Total training steps: {steps.item()}")
+            #print(f"Total training steps: {steps.item()}")
         else:
             steps = torch.tensor(0, device=device)
             dist.broadcast(steps, 0)
 
         if rank == 0:
-            pbar = tqdm(total=int(steps.item()), 
+            pbar = tqdm(total=int(args.train_steps), 
                        desc=f"Training Epoch {epoch+1}",
                        unit="step",
                        bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}]')
             start_time = time.time()
         
-        for step in range(int(steps.item())):
+        for step in range(int(args.train_steps)):
             step_start_time = time.time()
             opt.zero_grad(set_to_none=True)
             

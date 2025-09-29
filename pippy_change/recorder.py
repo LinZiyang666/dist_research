@@ -5,7 +5,6 @@ from typing import List, Tuple, Iterable, Optional
 import psutil          
 import torch.distributed as dist
 from schedule_runtime import _mark_done, _mark_done_chunk
-from temp_lock import enter, leave
 
 @dataclass
 @dataclass
@@ -115,6 +114,7 @@ class Recorder:
             return
         
         need_net = self.measure_net and action in self.net_actions
+        need_net = False
         samples, stop_evt = [], threading.Event()
 
         if action in ("SEND_F", "SEND_B"):
@@ -149,19 +149,11 @@ class Recorder:
         def waiter():
             status = "completed"
             try:
-                # print(f"[{dist.get_rank()}] Waiting for {len(works)} works (action={action_id}, chunk={chunk_idx})")
-                # while not all(w.is_completed() for w in works):
-                #     time.sleep(poll_interval)
-                
-                enter(id=action_id)
                 for w in works:
                     if w.is_completed():
                         continue
                     w.wait()
                 end_ns = time.time_ns()
-                # if action == "RECV_F":
-                #     print(f"这里RECV_F [{mb_idx}] 停止计时{end_ns}")
-                leave(id=action_id)
                 
                 if need_net:
                     stop_evt.set()

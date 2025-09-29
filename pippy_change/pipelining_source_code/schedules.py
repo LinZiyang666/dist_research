@@ -10,6 +10,8 @@ from abc import ABC, abstractmethod
 from collections import Counter, defaultdict
 from enum import Enum
 from typing import Any, Callable, NamedTuple, Optional, Union, Iterable, Dict, List, Tuple
+import json
+from dataclasses import dataclass, asdict
 
 import torch
 import torch.distributed as dist
@@ -796,8 +798,14 @@ class Schedule1F1B(PipelineScheduleSingle):
         Args:
             microbatches: list of microbatch args.
         """
+        from recorder import Recorder
+        self._rec = Recorder(rank=dist.get_rank(),net_sample_interval_ms=10)  
+        self._rec.set_enabled(True)
+        
+        self.is_print = 0
         arg_mbs, kwarg_mbs = self._check_inputs(arg_mbs, kwarg_mbs, target_mbs, losses)
-
+        
+        
         if not self._stage_initialized:
             self._initialize_stage(arg_mbs[0], kwarg_mbs[0])
 
@@ -815,16 +823,43 @@ class Schedule1F1B(PipelineScheduleSingle):
         # Warmup phase
         send_work: list[dist.Work] = []
         fwd_sends = []
+        fwd_count = 0
+        bwd_count = 0
         for _ in range(warmup_chunks):
             # Receive activations
             fwd_recvs = self._stage.get_fwd_recv_ops(fwd_mb_index)
             _wait_batch_p2p(_batch_p2p(fwd_recvs, desc="fwd_recv"))
 
             # Compute
-            output = self._stage.forward_one_chunk(
-                fwd_mb_index, arg_mbs[fwd_mb_index], kwarg_mbs[fwd_mb_index]
-            )  # type: ignore[index]
-
+            with self._rec.record(0,0,"FORWARD", dist.get_rank(), fwd_count):
+                # print(
+                #     "FORWARD arg_shapes=", tuple(
+                #         (t.shape if torch.is_tensor(t) else type(t))
+                #         for t in arg_mbs[fwd_mb_index]
+                #     ),
+                #     "; kwarg_shapes=",
+                #     {k: (v.shape if torch.is_tensor(v) else type(v))
+                #     for k, v in kwarg_mbs[fwd_mb_index]}
+                # )
+                # if self.is_print == 0:
+                #     self.is_print =1
+                #     from tensor_debug import dump_forward_debug
+                #     import os
+                #     try:
+                #         save_dir = dump_forward_debug(
+                #             save_root=os.path.abspath("./framework_forward"),
+                #             composite_args=arg_mbs[fwd_mb_index],
+                #             composite_kwargs=kwarg_mbs[fwd_mb_index],
+                #             outputs=None,
+                #             tag=f"rank{torch.distributed.get_rank() if torch.distributed.is_initialized() else 0}"
+                #         )
+                #         print(f"[forward-debug] saved to: {save_dir}")
+                #     except Exception as e:
+                #         print(f"[forward-debug] dump failed: {e}")
+                output = self._stage.forward_one_chunk(
+                    fwd_mb_index, arg_mbs[fwd_mb_index], kwarg_mbs[fwd_mb_index]
+                )  # type: ignore[index]
+            fwd_count += 1
             # Clear previous chunk's forward sends (hopefully they have well
             # finished, otherwise, we are heavily communication bound, in which
             # case it doesn't create a lot of benefit to compute next chunk
@@ -855,11 +890,13 @@ class Schedule1F1B(PipelineScheduleSingle):
 
             # Backward one chunk
             loss = self._maybe_get_loss(self._stage, bwd_mb_index)
-            self._stage.backward_one_chunk(
-                bwd_mb_index,
-                loss=loss,
-                last_backward=bwd_mb_index == self._n_microbatches - 1,
-            )
+            with self._rec.record(0, 0, "FULL_BACKWARD", dist.get_rank(), bwd_count):
+                self._stage.backward_one_chunk(
+                    bwd_mb_index,
+                    loss=loss,
+                    last_backward=bwd_mb_index == self._n_microbatches - 1,
+                )
+            bwd_count = 0
 
             # Get the bwd send ops, but don't fire, to be fused with the 1F below
             bwd_sends = self._stage.get_bwd_send_ops(bwd_mb_index)
@@ -876,9 +913,20 @@ class Schedule1F1B(PipelineScheduleSingle):
             _wait_batch_p2p(_batch_p2p(bwd_sends + fwd_recvs, desc="bwd_send_fwd_recv"))
 
             # Now do the fwd
-            output = self._stage.forward_one_chunk(
-                fwd_mb_index, arg_mbs[fwd_mb_index], kwarg_mbs[fwd_mb_index]
-            )  # type: ignore[index]
+            with self._rec.record(0,0,"FORWARD", dist.get_rank(), fwd_count):
+                print(
+                    "FORWARD arg_shapes=", tuple(
+                        (t.shape if torch.is_tensor(t) else type(t))
+                        for t in arg_mbs[fwd_mb_index]
+                    ),
+                    "; kwarg_shapes=",
+                    {k: (v.shape if torch.is_tensor(v) else type(v))
+                    for k, v in kwarg_mbs[fwd_mb_index]}
+                )
+                output = self._stage.forward_one_chunk(
+                    fwd_mb_index, arg_mbs[fwd_mb_index], kwarg_mbs[fwd_mb_index]
+                )  # type: ignore[index]
+            fwd_count +=1
 
             # Compute loss
             self._maybe_compute_loss(self._stage, output, target_mbs, fwd_mb_index)
@@ -898,11 +946,13 @@ class Schedule1F1B(PipelineScheduleSingle):
 
             # Backward one chunk
             loss = self._maybe_get_loss(self._stage, bwd_mb_index)
-            self._stage.backward_one_chunk(
-                bwd_mb_index,
-                loss=loss,
-                last_backward=bwd_mb_index == self._n_microbatches - 1,
-            )
+            with self._rec.record(0, 0, "FULL_BACKWARD", dist.get_rank(), bwd_count):
+                self._stage.backward_one_chunk(
+                    bwd_mb_index,
+                    loss=loss,
+                    last_backward=bwd_mb_index == self._n_microbatches - 1,
+                )
+            bwd_count += 1
 
             # Clear previous chunk's backward sends (hopefully they have well finished)
             _wait_batch_p2p(send_work)
@@ -941,6 +991,22 @@ class Schedule1F1B(PipelineScheduleSingle):
         
         # Return losses if there is a container passed in
         self._update_losses(self._stage, losses)
+        self.save_timeline(0)
+        
+    def save_timeline(self, fname_prefix="timeline"):
+        if dist.is_initialized():
+            if dist.get_world_size() == 1:
+                self._rec.dump(f"{fname_prefix}_rank0.json")
+            else:
+                gathered = [None] * dist.get_world_size()
+                dist.gather_object(self._rec.events, gathered if dist.get_rank() == 0 else None, dst=0)
+                if dist.get_rank() == 0:
+                    all_ev = sum(gathered, [])
+                    with open(f"{fname_prefix}_all.json", "w") as f:
+                        json.dump([asdict(e) for e in all_ev], f, indent=2)
+        else:
+            self._rec.dump(f"{fname_prefix}_solo.json")
+        self._rec.events.clear()
 
 
 def _add_unshard_reshard(

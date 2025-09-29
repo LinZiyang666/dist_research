@@ -24,7 +24,6 @@ from pipelining_source_code.schedules import _Action, _ComputationType
 from pipelining_source_code.stage import _normalize_model_output_as_tuple
 from pipelining_source_code._utils import flatten_args
 from torch.distributed.distributed_c10d import _get_default_store
-from temp_lock import enter, leave
 import atexit, signal, threading, json
 from stage_with_mutiple_ranks import PipelineStage_with_mutiple_ranks, PipelineStage_Multimodality
 logger = logging.getLogger(__name__)
@@ -921,6 +920,7 @@ class PipelineScheduleRuntimeWithDirection(schedule.PipelineScheduleMulti):
 
         # count either full_backward or backward_weight together, to determine when to sync DP grads
         backward_counter: Counter[int] = Counter()
+        first_fwd = 1
         for time_step, action in enumerate(self.pipeline_order_with_comms[self.rank]):
             try:
                 deps = action.dependency
@@ -1262,12 +1262,15 @@ class PipelineScheduleRuntimeWithDirection(schedule.PipelineScheduleMulti):
                 elif comp_type == FORWARD:
                     print(f"[{dist.get_rank()}]: batch {current_batch+1} FORWARD microbatch {mb_field}")
                     
+                    if first_fwd == 1:
+                        dist.barrier()
+                        first_fwd = 0
                     mb_ids: tuple[int, ...] = (mb_field,) if isinstance(mb_field, int) else tuple(mb_field)
                     rep_id = mb_ids[0]
 
                     if stage_uses_fsdp:
                         _assert_unsharded(stage_idx)
-                    
+
                     if stage.is_first:
                         if len(mb_ids) > 1:
                             for mid in mb_ids:
@@ -1275,37 +1278,19 @@ class PipelineScheduleRuntimeWithDirection(schedule.PipelineScheduleMulti):
                                     arg_mbs[mid] = arg_mbs[rep_id]
                                 if kwarg_mbs and mid not in kwarg_mbs and rep_id in kwarg_mbs:
                                     kwarg_mbs[mid] = kwarg_mbs[rep_id]
-                        
+
                         cat_args = tuple(
                             torch.cat([arg_mbs[mid][i] for mid in mb_ids], dim=0)
                             for i in range(len(arg_mbs[rep_id]))
                         )
-                        
+
                         if kwarg_mbs and kwarg_mbs[rep_id]:
-                            cat_kwargs: dict[str, Any] = {}
-                            for k in kwarg_mbs[rep_id]:
-                                vals = [kwarg_mbs[mid][k] for mid in mb_ids]
-                                cat_kwargs[k] = _cat_like(vals)
+                            cat_kwargs = {
+                                k: _cat_like([kwarg_mbs[mid][k] for mid in mb_ids])
+                                for k in kwarg_mbs[rep_id]
+                            }
                         else:
                             cat_kwargs = {}
-
-                        # Debug: dump audio kwargs shapes for first stage (rank 0) to verify microbatch split
-                        try:
-                            if dist.get_rank() == 0:
-                                ai = cat_kwargs.get("audio_inputs", None)
-                                if ai is None:
-                                    print(f"[rank0] schedule-debug: cat_kwargs has no audio_inputs for mb={rep_id}")
-                                elif isinstance(ai, dict):
-                                    feat = ai.get("input_features", None)
-                                    fam = ai.get("feature_attention_mask", None)
-                                    feat_shape = (tuple(feat.shape), str(feat.dtype)) if torch.is_tensor(feat) else type(feat).__name__
-                                    fam_shape = (tuple(fam.shape), str(fam.dtype)) if torch.is_tensor(fam) else type(fam).__name__
-                                    print(f"[rank0] schedule-debug: mb={rep_id} audio_inputs.input_features={feat_shape} feature_attention_mask={fam_shape}")
-                                else:
-                                    print(f"[rank0] schedule-debug: audio_inputs is {type(ai).__name__} for mb={rep_id}")
-                        except Exception:
-                            pass
-                            
                     else:
                         # 非首段：先等待上游 RECV_F
                         if not is_prev_stage_on_this_rank:
@@ -1322,10 +1307,14 @@ class PipelineScheduleRuntimeWithDirection(schedule.PipelineScheduleMulti):
                                         self._fwd_recv_posted[key_m].wait()
                                         with self._async_recv_lock:
                                             works = self._fwd_recv_works.pop(key_m, [])
-                                        if works:
-                                            enter(0)
-                                            schedule._wait_batch_p2p(works)
-                                            leave(0)
+                                        # if works and not all(w.is_completed() for  w in works):
+                                        #     enter(0)
+                                        #     print(f"FORWARD {action_id} 进入wait")
+                                        #     schedule._wait_batch_p2p(works)
+                                        #     print(f"FORWARD {action_id} 离开wait")
+                                        #     leave(0)
+                                        while not all(w.is_completed() for w in works):
+                                            time.sleep(0.001)
                                         self._fwd_recv_posted.pop(key_m, None)
 
                                         if hasattr(stage, "finish_fwd_recv_mm"):
@@ -1339,10 +1328,15 @@ class PipelineScheduleRuntimeWithDirection(schedule.PipelineScheduleMulti):
                                     with self._async_recv_lock:
                                         works_count = len(self._fwd_recv_works.get(key, []))
                                         works = self._fwd_recv_works.pop(key, [])
-                                    if works:
-                                        enter(0)
-                                        schedule._wait_batch_p2p(works)
-                                        leave(0)
+                                    # if works and not all(w.is_completed() for  w in works):
+                                    #     enter(0)
+                                    #     print(f"FORWARD {action_id} 进入wait")
+                                    #     schedule._wait_batch_p2p(works)
+                                    #     print(f"FORWARD {action_id} 离开wait")
+                                    #     leave(0)
+                                    while not all(w.is_completed() for w in works):
+                                        time.sleep(0.001)
+                                        
                                     self._fwd_recv_posted.pop(key, None)
 
                         # 取本段前向输入
@@ -1497,9 +1491,14 @@ class PipelineScheduleRuntimeWithDirection(schedule.PipelineScheduleMulti):
                                     with self._async_recv_lock:
                                         works = self._bwd_recv_works.pop(key_m, [])
                                     
-                                    enter(0)
-                                    schedule._wait_batch_p2p(works)
-                                    leave(0)
+                                    # if works and not all(w.is_completed() for  w in works):
+                                    #     enter(0)
+                                    #     print(f"BACKWARD {action_id} 进入wait")
+                                    #     schedule._wait_batch_p2p(works)
+                                    #     print(f"BACKWARD {action_id} 离开wait")
+                                    #     leave(0)
+                                    while not all(w.is_completed() for w in works):
+                                        time.sleep(0.001)
                                     
                                     self._bwd_recv_posted.pop(key_m, None)
                                     # 模态内粘合（若内部用到了临时 flat 缓冲）
@@ -1513,9 +1512,14 @@ class PipelineScheduleRuntimeWithDirection(schedule.PipelineScheduleMulti):
                                     with self._async_recv_lock:
                                         works = self._bwd_recv_works.pop(key, [])
                                     
-                                    enter(0)
-                                    schedule._wait_batch_p2p(works)
-                                    leave(0)
+                                    # if works and not all(w.is_completed() for  w in works):
+                                    #     enter(0)
+                                    #     print(f"BACKWARD {action_id} 进入wait")
+                                    #     schedule._wait_batch_p2p(works)
+                                    #     print(f"BACKWARD {action_id} 离开wait")
+                                    #     leave(0)
+                                    while not all(w.is_completed() for w in works):
+                                        time.sleep(0.001)
                                     
                                     self._bwd_recv_posted.pop(key, None)
 

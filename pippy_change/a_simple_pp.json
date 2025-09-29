@@ -1,0 +1,12 @@
+{
+  "total_layer": 28,
+  "total_devices": 3,
+  "total_stages": 3,
+  "total_batchs": 5,
+
+  "stage_info": [
+    { "index": 0, "ranks": [0], "shard_layer": [0, 9], "batch_allocate": [5] },
+    { "index": 1, "ranks": [1], "shard_layer": [9, 19], "batch_allocate": [5] },
+    { "index": 2, "ranks": [2], "shard_layer": [19, 28], "batch_allocate": [5] }
+  ]
+}
